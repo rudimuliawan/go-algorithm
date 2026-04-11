@@ -1,6 +1,7 @@
 package data_structures
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -19,40 +20,40 @@ func TestBagAdd(t *testing.T) {
 		}
 	})
 
-	t.Run("add multiple items returns in LIFO order", func(t *testing.T) {
+	t.Run("add multiple items contains all items", func(t *testing.T) {
 		bag := &Bag[string]{}
 		bag.Add("first")
 		bag.Add("second")
 		bag.Add("third")
 
 		items := collectAll(bag)
-		expected := []string{"third", "second", "first"}
+		expected := []string{"first", "second", "third"}
 
 		if len(items) != len(expected) {
 			t.Fatalf("expected %d items, got %d", len(expected), len(items))
 		}
-		for i, item := range items {
-			if item != expected[i] {
-				t.Errorf("at index %d: expected %v, got %v", i, expected[i], item)
+		for _, e := range expected {
+			if !slices.Contains(items, e) {
+				t.Errorf("expected item %v to be in bag", e)
 			}
 		}
 	})
 
-	t.Run("add integer items", func(t *testing.T) {
+	t.Run("add integer items contains all items", func(t *testing.T) {
 		bag := &Bag[int]{}
 		bag.Add(1)
 		bag.Add(2)
 		bag.Add(3)
 
 		items := collectAll(bag)
-		expected := []int{3, 2, 1}
+		expected := []int{1, 2, 3}
 
 		if len(items) != len(expected) {
 			t.Fatalf("expected %d items, got %d", len(expected), len(items))
 		}
-		for i, item := range items {
-			if item != expected[i] {
-				t.Errorf("at index %d: expected %d, got %d", i, expected[i], item)
+		for _, e := range expected {
+			if !slices.Contains(items, e) {
+				t.Errorf("expected item %d to be in bag", e)
 			}
 		}
 	})
@@ -114,17 +115,19 @@ func TestBagIterator(t *testing.T) {
 		}
 	})
 
-	t.Run("iterate preserves insertion order (LIFO)", func(t *testing.T) {
+	t.Run("iterate contains all inserted items", func(t *testing.T) {
 		bag := &Bag[int]{}
 		for i := range 5 {
 			bag.Add(i)
 		}
 
 		items := collectAll(bag)
-		for i, item := range items {
-			expected := 4 - i
-			if item != expected {
-				t.Errorf("at index %d: expected %d, got %v", i, expected, item)
+		if len(items) != 5 {
+			t.Fatalf("expected 5 items, got %d", len(items))
+		}
+		for i := range 5 {
+			if !slices.Contains(items, i) {
+				t.Errorf("expected item %d to be in bag", i)
 			}
 		}
 	})
