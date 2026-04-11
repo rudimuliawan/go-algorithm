@@ -10,6 +10,7 @@ type node[T comparable, U comparable] struct {
 	value U
 	next  *node[T, U]
 }
+
 type SequentialSearchST[T comparable, U comparable] struct {
 	first *node[T, U]
 }
@@ -39,7 +40,7 @@ func (s *SequentialSearchST[T, U]) Put(key T, value U) {
 }
 
 func (s *SequentialSearchST[T, U]) Delete(key T) error {
-	var prev *node[T, U]
+	prev := s.first
 
 	for curr := s.first; curr != nil; curr = curr.next {
 		if curr.key == key {
