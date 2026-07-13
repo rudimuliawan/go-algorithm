@@ -18,7 +18,7 @@ func (s *Stack[T]) Push(item T) {
 
 func (s *Stack[T]) Pop() (T, error) {
 	var zero T
-	if s.top == nil {
+	if s.IsEmpty() {
 		return zero, ErrEmptyStack
 	}
 
