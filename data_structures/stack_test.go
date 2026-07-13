@@ -90,6 +90,98 @@ func TestStackPop(t *testing.T) {
 	})
 }
 
+func TestStackTop(t *testing.T) {
+	t.Run("top on empty stack returns error", func(t *testing.T) {
+		s := &Stack[int]{}
+		_, err := s.Top()
+
+		if !errors.Is(err, ErrEmptyStack) {
+			t.Errorf("expected ErrEmptyStack, got %v", err)
+		}
+	})
+
+	t.Run("top returns top item without removing it", func(t *testing.T) {
+		s := &Stack[int]{}
+		s.Push(1)
+		s.Push(2)
+		s.Push(3)
+
+		item, err := s.Top()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if item != 3 {
+			t.Errorf("expected 3, got %d", item)
+		}
+		if s.Len() != 3 {
+			t.Errorf("expected size to remain 3, got %d", s.Len())
+		}
+	})
+
+	t.Run("top returns same value on repeated calls", func(t *testing.T) {
+		s := &Stack[string]{}
+		s.Push("a")
+		s.Push("b")
+
+		first, err := s.Top()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		second, err := s.Top()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if first != second {
+			t.Errorf("expected repeated Top() calls to match: %v != %v", first, second)
+		}
+	})
+
+	t.Run("top reflects most recently pushed item after pop", func(t *testing.T) {
+		s := &Stack[int]{}
+		s.Push(1)
+		s.Push(2)
+		s.Pop()
+
+		item, err := s.Top()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if item != 1 {
+			t.Errorf("expected 1, got %d", item)
+		}
+	})
+}
+
+func TestStackIsEmpty(t *testing.T) {
+	t.Run("new stack is empty", func(t *testing.T) {
+		s := &Stack[int]{}
+		if !s.IsEmpty() {
+			t.Error("expected new stack to be empty")
+		}
+	})
+
+	t.Run("stack with items is not empty", func(t *testing.T) {
+		s := &Stack[int]{}
+		s.Push(1)
+
+		if s.IsEmpty() {
+			t.Error("expected stack with items to not be empty")
+		}
+	})
+
+	t.Run("stack is empty again after draining", func(t *testing.T) {
+		s := &Stack[int]{}
+		s.Push(1)
+		s.Pop()
+
+		if !s.IsEmpty() {
+			t.Error("expected stack to be empty after draining")
+		}
+	})
+}
+
 func TestStackLen(t *testing.T) {
 	t.Run("empty stack has size zero", func(t *testing.T) {
 		s := &Stack[int]{}

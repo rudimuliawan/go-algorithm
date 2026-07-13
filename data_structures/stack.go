@@ -29,6 +29,19 @@ func (s *Stack[T]) Pop() (T, error) {
 	return item, nil
 }
 
+func (s *Stack[T]) Top() (T, error) {
+	var zero T
+	if s.IsEmpty() {
+		return zero, ErrEmptyStack
+	}
+
+	return s.top.Item, nil
+}
+
 func (s *Stack[T]) Len() int {
 	return s.size
+}
+
+func (s *Stack[T]) IsEmpty() bool {
+	return s.size == 0
 }
