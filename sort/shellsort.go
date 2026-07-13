@@ -12,8 +12,8 @@ func ShellSort(data []int) []int {
 		for i := h; i < n; i++ {
 			for j := i; j >= h && data[j] < data[j-h]; j -= h {
 				temp := data[j]
-				data[j] = data[j-1]
-				data[j-1] = temp
+				data[j] = data[j-h]
+				data[j-h] = temp
 			}
 		}
 
