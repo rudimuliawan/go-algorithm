@@ -1,11 +1,5 @@
 package data_structures
 
-import (
-	"errors"
-)
-
-var ErrEmptyStack = errors.New("stack is empty")
-
 type Stack[T any] struct {
 	top  *node[T]
 	size int
@@ -16,26 +10,26 @@ func (s *Stack[T]) Push(item T) {
 	s.size++
 }
 
-func (s *Stack[T]) Pop() (T, error) {
+func (s *Stack[T]) Pop() T {
 	var zero T
 	if s.IsEmpty() {
-		return zero, ErrEmptyStack
+		return zero
 	}
 
 	item := s.top.Item
 	s.top = s.top.Next
 	s.size--
 
-	return item, nil
+	return item
 }
 
-func (s *Stack[T]) Top() (T, error) {
+func (s *Stack[T]) Top() T {
 	var zero T
 	if s.IsEmpty() {
-		return zero, ErrEmptyStack
+		return zero
 	}
 
-	return s.top.Item, nil
+	return s.top.Item
 }
 
 func (s *Stack[T]) Len() int {

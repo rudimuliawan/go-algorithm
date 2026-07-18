@@ -1,9 +1,5 @@
 package data_structures
 
-import "errors"
-
-var ErrEmptyQueue = errors.New("queue is empty")
-
 type Queue[T any] struct {
 	first *node[T]
 	last  *node[T]
@@ -23,10 +19,10 @@ func (q *Queue[T]) Enqueue(item T) {
 	q.size++
 }
 
-func (q *Queue[T]) Dequeue() (T, error) {
+func (q *Queue[T]) Dequeue() T {
 	var zero T
 	if q.IsEmpty() {
-		return zero, ErrEmptyQueue
+		return zero
 	}
 
 	item := q.first.Item
@@ -37,16 +33,16 @@ func (q *Queue[T]) Dequeue() (T, error) {
 
 	q.size--
 
-	return item, nil
+	return item
 }
 
-func (q *Queue[T]) First() (T, error) {
+func (q *Queue[T]) First() T {
 	var zero T
 	if q.IsEmpty() {
-		return zero, ErrEmptyQueue
+		return zero
 	}
 
-	return q.first.Item, nil
+	return q.first.Item
 }
 
 func (q *Queue[T]) Len() int {

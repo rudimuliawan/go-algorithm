@@ -1,7 +1,6 @@
 package data_structures
 
 import (
-	"errors"
 	"testing"
 )
 
@@ -28,12 +27,12 @@ func TestQueueEnqueue(t *testing.T) {
 }
 
 func TestQueueDequeue(t *testing.T) {
-	t.Run("dequeue from empty queue returns error", func(t *testing.T) {
+	t.Run("dequeue from empty queue returns zero value", func(t *testing.T) {
 		q := &Queue[int]{}
-		_, err := q.Dequeue()
+		got := q.Dequeue()
 
-		if !errors.Is(err, ErrEmptyQueue) {
-			t.Errorf("expected ErrEmptyQueue, got %v", err)
+		if got != 0 {
+			t.Errorf("expected zero value 0, got %d", got)
 		}
 	})
 
@@ -45,10 +44,7 @@ func TestQueueDequeue(t *testing.T) {
 
 		expected := []int{1, 2, 3}
 		for i, exp := range expected {
-			item, err := q.Dequeue()
-			if err != nil {
-				t.Fatalf("unexpected error at step %d: %v", i, err)
-			}
+			item := q.Dequeue()
 			if item != exp {
 				t.Errorf("at step %d: expected %d, got %d", i, exp, item)
 			}
@@ -62,30 +58,26 @@ func TestQueueDequeue(t *testing.T) {
 		}
 
 		for expected := 2; expected >= 0; expected-- {
-			if _, err := q.Dequeue(); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
+			q.Dequeue()
 			if q.Len() != expected {
 				t.Errorf("expected size %d, got %d", expected, q.Len())
 			}
 		}
 	})
 
-	t.Run("dequeue all items then returns error", func(t *testing.T) {
+	t.Run("dequeue all items then returns zero value", func(t *testing.T) {
 		q := &Queue[string]{}
 		for _, v := range []string{"a", "b", "c"} {
 			q.Enqueue(v)
 		}
 
 		for range 3 {
-			if _, err := q.Dequeue(); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
+			q.Dequeue()
 		}
 
-		_, err := q.Dequeue()
-		if !errors.Is(err, ErrEmptyQueue) {
-			t.Errorf("expected ErrEmptyQueue after draining queue, got %v", err)
+		got := q.Dequeue()
+		if got != "" {
+			t.Errorf("expected zero value \"\" after draining queue, got %q", got)
 		}
 	})
 
@@ -94,12 +86,8 @@ func TestQueueDequeue(t *testing.T) {
 		q.Enqueue(1)
 		q.Enqueue(2)
 
-		if _, err := q.Dequeue(); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if _, err := q.Dequeue(); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		q.Dequeue()
+		q.Dequeue()
 
 		if !q.IsEmpty() {
 			t.Fatalf("expected queue to be empty after draining")
@@ -110,10 +98,7 @@ func TestQueueDequeue(t *testing.T) {
 
 		expected := []int{3, 4}
 		for i, exp := range expected {
-			item, err := q.Dequeue()
-			if err != nil {
-				t.Fatalf("unexpected error at step %d: %v", i, err)
-			}
+			item := q.Dequeue()
 			if item != exp {
 				t.Errorf("at step %d: expected %d, got %d", i, exp, item)
 			}
@@ -122,12 +107,12 @@ func TestQueueDequeue(t *testing.T) {
 }
 
 func TestQueueFirst(t *testing.T) {
-	t.Run("first on empty queue returns error", func(t *testing.T) {
+	t.Run("first on empty queue returns zero value", func(t *testing.T) {
 		q := &Queue[int]{}
-		_, err := q.First()
+		got := q.First()
 
-		if !errors.Is(err, ErrEmptyQueue) {
-			t.Errorf("expected ErrEmptyQueue, got %v", err)
+		if got != 0 {
+			t.Errorf("expected zero value 0, got %d", got)
 		}
 	})
 
@@ -137,10 +122,7 @@ func TestQueueFirst(t *testing.T) {
 		q.Enqueue(2)
 		q.Enqueue(3)
 
-		item, err := q.First()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		item := q.First()
 		if item != 1 {
 			t.Errorf("expected 1, got %d", item)
 		}
@@ -154,15 +136,8 @@ func TestQueueFirst(t *testing.T) {
 		q.Enqueue("a")
 		q.Enqueue("b")
 
-		first, err := q.First()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		second, err := q.First()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		first := q.First()
+		second := q.First()
 
 		if first != second {
 			t.Errorf("expected repeated First() calls to match: %v != %v", first, second)
@@ -175,10 +150,7 @@ func TestQueueFirst(t *testing.T) {
 		q.Enqueue(2)
 		q.Dequeue()
 
-		item, err := q.First()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		item := q.First()
 		if item != 2 {
 			t.Errorf("expected 2, got %d", item)
 		}

@@ -119,21 +119,21 @@ func TestBinaryTreeSize(t *testing.T) {
 	})
 }
 
-func TestBinaryTreeAll(t *testing.T) {
-	t.Run("all on empty tree returns empty slice", func(t *testing.T) {
+func TestBinaryTreeLevelOrder(t *testing.T) {
+	t.Run("level-order on empty tree returns empty slice", func(t *testing.T) {
 		tree := &BTree[int]{}
-		got := tree.All()
+		got := tree.LevelOrder()
 
 		if len(got) != 0 {
 			t.Errorf("expected empty slice, got %v", got)
 		}
 	})
 
-	t.Run("all on single node tree returns that item", func(t *testing.T) {
+	t.Run("level-order on single node tree returns that item", func(t *testing.T) {
 		tree := &BTree[int]{}
 		tree.Insert(1)
 
-		got := tree.All()
+		got := tree.LevelOrder()
 		expected := []int{1}
 
 		if !reflect.DeepEqual(got, expected) {
@@ -141,13 +141,13 @@ func TestBinaryTreeAll(t *testing.T) {
 		}
 	})
 
-	t.Run("all returns items in level-order for a full two-level tree", func(t *testing.T) {
+	t.Run("level-order returns items in level-order for a full two-level tree", func(t *testing.T) {
 		tree := &BTree[int]{}
 		for _, v := range []int{1, 2, 3, 4, 5, 6, 7} {
 			tree.Insert(v)
 		}
 
-		got := tree.All()
+		got := tree.LevelOrder()
 		expected := []int{1, 2, 3, 4, 5, 6, 7}
 
 		if !reflect.DeepEqual(got, expected) {
@@ -155,15 +155,117 @@ func TestBinaryTreeAll(t *testing.T) {
 		}
 	})
 
-	t.Run("all reflects a partially filled last level", func(t *testing.T) {
+	t.Run("level-order reflects a partially filled last level", func(t *testing.T) {
 		tree := &BTree[int]{}
 		for _, v := range []int{1, 2, 3, 4, 5} {
 			tree.Insert(v)
 		}
 
-		got := tree.All()
+		got := tree.LevelOrder()
 		expected := []int{1, 2, 3, 4, 5}
 
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected %v, got %v", expected, got)
+		}
+	})
+}
+
+func TestBinaryTreeInOrder(t *testing.T) {
+	t.Run("in-order on empty tree returns empty slice", func(t *testing.T) {
+		tree := &BTree[int]{}
+		got := tree.InOrder()
+
+		if len(got) != 0 {
+			t.Errorf("expected empty slice, got %v", got)
+		}
+	})
+
+	t.Run("in-order on single node tree returns that item", func(t *testing.T) {
+		tree := &BTree[int]{}
+		tree.Insert(1)
+
+		got := tree.InOrder()
+		expected := []int{1}
+
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected %v, got %v", expected, got)
+		}
+	})
+
+	t.Run("in-order returns items in in-order for a full two-level tree", func(t *testing.T) {
+		tree := &BTree[int]{}
+		for _, v := range []int{1, 2, 3, 4, 5, 6, 7} {
+			tree.Insert(v)
+		}
+
+		got := tree.InOrder()
+		expected := []int{4, 2, 5, 1, 6, 3, 7}
+
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected %v, got %v", expected, got)
+		}
+	})
+
+	t.Run("in-order reflects a partially filled last level", func(t *testing.T) {
+		tree := &BTree[int]{}
+		for _, v := range []int{1, 2, 3, 4, 5} {
+			tree.Insert(v)
+		}
+
+		got := tree.InOrder()
+		expected := []int{4, 2, 5, 1, 3}
+
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected %v, got %v", expected, got)
+		}
+	})
+}
+
+func TestBinaryTreePreOrder(t *testing.T) {
+	t.Run("pre-order on empty tree returns empty slice", func(t *testing.T) {
+		tree := &BTree[int]{}
+		got := tree.PreOrder()
+
+		if len(got) != 0 {
+			t.Errorf("expected empty slice, got %v", got)
+		}
+	})
+
+	t.Run("pre-order on single node tree returns that item", func(t *testing.T) {
+		tree := &BTree[int]{}
+		tree.Insert(1)
+
+		got := tree.PreOrder()
+
+		expected := []int{1}
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected %v, got %v", expected, got)
+		}
+	})
+
+	t.Run("pre-order returns items in pre-order for a full two-level tree", func(t *testing.T) {
+		tree := &BTree[int]{}
+		for _, v := range []int{1, 2, 3, 4, 5, 6, 7} {
+			tree.Insert(v)
+		}
+
+		got := tree.PreOrder()
+
+		expected := []int{1, 2, 4, 5, 3, 6, 7}
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected %v, got %v", expected, got)
+		}
+	})
+
+	t.Run("pre-order reflects a partially filled last level", func(t *testing.T) {
+		tree := &BTree[int]{}
+		for _, v := range []int{1, 2, 3, 4, 5} {
+			tree.Insert(v)
+		}
+
+		got := tree.PreOrder()
+
+		expected := []int{1, 2, 4, 5, 3}
 		if !reflect.DeepEqual(got, expected) {
 			t.Errorf("expected %v, got %v", expected, got)
 		}

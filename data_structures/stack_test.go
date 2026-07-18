@@ -1,7 +1,6 @@
 package data_structures
 
 import (
-	"errors"
 	"testing"
 )
 
@@ -28,12 +27,12 @@ func TestStackPush(t *testing.T) {
 }
 
 func TestStackPop(t *testing.T) {
-	t.Run("pop from empty stack returns error", func(t *testing.T) {
+	t.Run("pop from empty stack returns zero value", func(t *testing.T) {
 		s := &Stack[int]{}
-		_, err := s.Pop()
+		got := s.Pop()
 
-		if !errors.Is(err, ErrEmptyStack) {
-			t.Errorf("expected ErrEmptyStack, got %v", err)
+		if got != 0 {
+			t.Errorf("expected zero value 0, got %d", got)
 		}
 	})
 
@@ -45,10 +44,7 @@ func TestStackPop(t *testing.T) {
 
 		expected := []int{3, 2, 1}
 		for i, exp := range expected {
-			item, err := s.Pop()
-			if err != nil {
-				t.Fatalf("unexpected error at step %d: %v", i, err)
-			}
+			item := s.Pop()
 			if item != exp {
 				t.Errorf("at step %d: expected %d, got %d", i, exp, item)
 			}
@@ -62,41 +58,37 @@ func TestStackPop(t *testing.T) {
 		}
 
 		for expected := 2; expected >= 0; expected-- {
-			if _, err := s.Pop(); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
+			s.Pop()
 			if s.Len() != expected {
 				t.Errorf("expected size %d, got %d", expected, s.Len())
 			}
 		}
 	})
 
-	t.Run("pop all items then returns error", func(t *testing.T) {
+	t.Run("pop all items then returns zero value", func(t *testing.T) {
 		s := &Stack[string]{}
 		for _, v := range []string{"a", "b", "c"} {
 			s.Push(v)
 		}
 
 		for range 3 {
-			if _, err := s.Pop(); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
+			s.Pop()
 		}
 
-		_, err := s.Pop()
-		if !errors.Is(err, ErrEmptyStack) {
-			t.Errorf("expected ErrEmptyStack after draining stack, got %v", err)
+		got := s.Pop()
+		if got != "" {
+			t.Errorf("expected zero value \"\" after draining stack, got %q", got)
 		}
 	})
 }
 
 func TestStackTop(t *testing.T) {
-	t.Run("top on empty stack returns error", func(t *testing.T) {
+	t.Run("top on empty stack returns zero value", func(t *testing.T) {
 		s := &Stack[int]{}
-		_, err := s.Top()
+		got := s.Top()
 
-		if !errors.Is(err, ErrEmptyStack) {
-			t.Errorf("expected ErrEmptyStack, got %v", err)
+		if got != 0 {
+			t.Errorf("expected zero value 0, got %d", got)
 		}
 	})
 
@@ -106,10 +98,7 @@ func TestStackTop(t *testing.T) {
 		s.Push(2)
 		s.Push(3)
 
-		item, err := s.Top()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		item := s.Top()
 		if item != 3 {
 			t.Errorf("expected 3, got %d", item)
 		}
@@ -123,15 +112,8 @@ func TestStackTop(t *testing.T) {
 		s.Push("a")
 		s.Push("b")
 
-		first, err := s.Top()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		second, err := s.Top()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		first := s.Top()
+		second := s.Top()
 
 		if first != second {
 			t.Errorf("expected repeated Top() calls to match: %v != %v", first, second)
@@ -144,10 +126,7 @@ func TestStackTop(t *testing.T) {
 		s.Push(2)
 		s.Pop()
 
-		item, err := s.Top()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		item := s.Top()
 		if item != 1 {
 			t.Errorf("expected 1, got %d", item)
 		}
